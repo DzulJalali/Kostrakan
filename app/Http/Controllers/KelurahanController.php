@@ -48,8 +48,9 @@ class KelurahanController extends Controller
     public function submitTambahData(Request $request)
     {
         $response = [
+            'namaKelurahan' => $request->namaKelurahan,
             'id_kecamatan' => $request->id_kecamatan,
-            'nama_kelurahan' => $request->nama_kelurahan,
+            'id_kota' => $request->id_kota,
         ];
         $this->kelurahan->tambahData($response);
         return redirect()->route('kelurahan')->with('success', 'Data Berhasil Di Tambahkan');
@@ -66,8 +67,9 @@ class KelurahanController extends Controller
     public function submitDataEdit(Request $request, $id)
     {
         $response=[
+            'namaKelurahan' => $request->namaKelurahan,
             'id_kecamatan' => $request->id_kecamatan,
-            'nama_kelurahan' => $request->nama_kelurahan,
+            'id_kota' => $request->id_kota,
         ];
         $this->kelurahan->editData($id,$response);
         return redirect()->route('kelurahan')->with('success', 'Data Berhasil Di Update');

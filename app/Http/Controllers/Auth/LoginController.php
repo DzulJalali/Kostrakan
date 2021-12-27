@@ -77,12 +77,14 @@ class LoginController extends Controller
     // Google login
     public function redirectToGoogle()
     {
+        //function ini akan membawa request user kedalam login google
         return Socialite::driver('google')->stateless()->redirect();
     }
 
     // Google callback
     public function handleGoogleCallback()
     {
+        //get oauth request dari google untuk mengautentikasi user
         $user = Socialite::driver('google')->stateless()->user();
 
         $this->_registerOrLoginUser($user);
@@ -93,6 +95,7 @@ class LoginController extends Controller
 
     protected function _registerOrLoginUser($data)
     {
+        //menambahkan data user yang melakukan login/register menggunakan akun google kedalam database
         // $user = Socialite::driver('google')->stateless()->user();
         $user = User::where('email', '=', $data->email)->first();
         

@@ -8,10 +8,24 @@ use Illuminate\Support\Facades\DB;
 
 class Home extends Model
 {
-    public function getAll(){
+    protected $table = 'building_details';
+    protected $primaryKey = 'building_id';
+    
+    public function getAll()
+    {
         return DB::table('building_details')
                 ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
                 ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
                 ->get();
+    }
+
+    public function cities()
+    {
+        return $this->hasOne(Cities::class);
+    }
+
+    public function buildingtypes()
+    {
+        return $this->hasOne(BuildingTypes::class);
     }
 }

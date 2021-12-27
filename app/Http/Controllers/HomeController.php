@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Home;
 use App\Models\Daerah;
 use App\Models\BuildingTypes;
+use App\Models\BuildingDetails;
 use App\Models\Cities;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -24,6 +26,7 @@ class HomeController extends Controller
         $this->tipe = new BuildingTypes();
         $this->kotakabupaten = new Cities();
         $this->user = new User();
+        $this->buildingdetails = new BuildingDetails();
 
     }
 
@@ -35,8 +38,9 @@ class HomeController extends Controller
     public function index()
     {
         $data=[
-            'bangunan' => $this->bangunan->getAll(),
-            'dataDaerah'=>$this->daerah->all_data(),
+            'detailbangunan' => $this->bangunan->getAll(),
+            'bangunan' => $this->buildingdetails->getAll(),
+            
             'tipeBangunan' => $this->tipe->getAll(),
             'cities' => $this->kotakabupaten->getAll(),
             'user' => $this->user->getAll(),
@@ -44,12 +48,80 @@ class HomeController extends Controller
         // dd($data);
         return view('home', $data);
     }
+    
+    
+    public function searchwithkeyword(Request $request)
+    {
+        $search = $request->search;
+        $bangunan = DB::table('building_details')
+        ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+        ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+        ->where('alamat', 'LIKE', '%'.$search.'%')
+        ->orWhere('harga', 'LIKE', '%'.$search.'%')->get();
+        //dd($bangunan);
+        return view('search', compact('bangunan'));
+    }
 
-    // public function apiKecamatan()
+    // public function advanceSearch(Request $request)
     // {
-    //     $data = [
-    //         'dataKecamatan'=>$this->kecamatan->all_data(),
-    //     ];
-    //     return view('home',$data);
+    //     $kk_id = $request->kk_id;
+    //     $tipe_id = $request->tipe_id;
+
+        
+    //     $bangunan = DB::table('building_details')
+    //     ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+    //     ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+    //     ->where('building_details.kk_id', $kk_id)
+    //     ->where('building_details.tipe_id', $tipe_id)
+    //     ->get();
+    //     dd($bangunan);
+        
     // }
+
+    public function advanceSearch(Request $request)
+    {
+        $kk_id = $request->kk_id;
+        $tipe_id = $request->tipe_id;
+
+        if($kk_id != null && $tipe_id!= null)
+        {
+            $bangunan = DB::table('building_details')
+            ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+            ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+            ->where('building_details.kk_id', $kk_id)
+            ->where('building_details.tipe_id', $tipe_id)
+            ->get();
+        }
+        else if($kk_id != null)
+        {
+            $kk_id = $request->kk_id;
+            $bangunan = DB::table('building_details')
+            ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+            ->where('building_details.kk_id', $kk_id)
+            ->get();
+        }
+        else if($tipe_id!=null)
+        {
+            $tipe_id = $request->tipe_id;
+            $bangunan = DB::table('building_details')
+            ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+            ->where('building_details.tipe_id', $tipe_id)
+            ->get();
+        }
+        else
+        {
+            return "<h1 align='center'>Please select atleast one filter from dropdown</h1>";
+        }
+
+        if(count($bangunan)=="0"){
+            echo "<h1 align='center'>no products found under this Category</h1>";
+          }
+          else
+          {
+          return view('search',[
+            'bangunan' => $bangunan, 'display' => $bangunan[0]->nama_kk
+          ]);
+         }
+        
+    }
 }

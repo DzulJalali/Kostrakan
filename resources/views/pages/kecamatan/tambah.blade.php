@@ -29,9 +29,16 @@ Tambah Kecamatan
             <form action="{{route('tambahDataKecamatan')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                    <label for="nama_kecamatan">Nama Kecamatan</label>
-                    <input type="text" class="form-control" name="nama_kecamatan" placeholder="Masukan Nama Kecamatan"
-                        value="{{ old('nama_kecamatan') }}">
+                    <label for="kode_pos">Kode Pos</label>
+                    <input type="text" class="form-control" name="kode_pos" placeholder="Masukan Kode Pos">
+                </div>
+                <div class="form-group">
+                    <label for="namaKecamatan">Nama Kecamatan</label>
+                    <input type="text" class="form-control" name="namaKecamatan" placeholder="Masukan Nama Kecamatan">
+                </div>
+                <div class="form-group">
+                    <label for="namaKota">Nama Kota</label>
+                    <input type="text" class="form-control" name="namaKota" placeholder="Masukan Nama Kota">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">
                     Simpan

@@ -101,7 +101,7 @@
                             <div class="col-sm-4 offset-md-4">
                                 <a href="{{ route('login.google') }}">
                                     <button type="button" class="btn btn-block btn-google">
-                                        <i class="fa fa-google mr-2"></i>Google
+                                        <ion-icon name="logo-google"></ion-icon>Google
                                     </button>
                                 </a>
                             </div>

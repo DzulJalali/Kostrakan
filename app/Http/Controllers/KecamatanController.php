@@ -48,7 +48,9 @@ class KecamatanController extends Controller
     public function submitTambahData(Request $request)
     {
         $response = [
-            'nama_kecamatan' => $request->nama_kecamatan,
+            'kode_pos' => $request->kode_pos,
+            'namaKecamatan' => $request->namaKecamatan,
+            'id_kota' => $request->id_kota,
         ];
         $this->kecamatan->tambahData($response);
         return redirect()->route('kecamatan')->with('success', 'Data Berhasil Di Tambahkan');
@@ -65,7 +67,9 @@ class KecamatanController extends Controller
     public function submitDataEdit(Request $request, $id)
     {
         $response=[
-            'nama_kecamatan' => $request->nama_kecamatan,
+            'kode_pos' => $request->kode_pos,
+            'namaKecamatan' => $request->namaKecamatan,
+            'id_kota' => $request->id_kota,
         ];
         $this->kecamatan->editData($id,$response);
         return redirect()->route('kecamatan')->with('success', 'Data Berhasil Di Update');

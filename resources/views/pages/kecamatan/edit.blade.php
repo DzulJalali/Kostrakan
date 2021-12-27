@@ -1,9 +1,5 @@
 @extends('layouts_admin.main')
 
-@section('title')
-Edit Kecamatan {{$dataKecamatan['nama_kecamatan']}}
-@endsection
-
 @section('content')
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -29,9 +25,19 @@ Edit Kecamatan {{$dataKecamatan['nama_kecamatan']}}
             <form action="/kecamatan/update/{{$dataKecamatan['id_kecamatan']}}" method="post">
                 @csrf
                 <div class="form-group">
-                    <label for="nama_kecamatan">Nama Kecamatan</label>
-                    <input type="text" class="form-control" name="nama_kecamatan" placeholder="Masukan Nama Kecamatan"
-                        value="{{ $dataKecamatan['nama_kecamatan']}}">
+                    <label for="kode_pos">Kode Pos</label>
+                    <input type="text" class="form-control" name="kode_pos" placeholder="Masukan Kode Pos"
+                        value="{{ $dataKecamatan['kode_pos']}}">
+                </div>
+                <div class="form-group">
+                    <label for="namaKecamatan">Nama Kecamatan</label>
+                    <input type="text" class="form-control" name="namaKecamatan" placeholder="Masukan Nama Kecamatan"
+                        value="{{ $dataKecamatan['namaKecamatan']}}">
+                </div>
+                <div class="form-group">
+                    <label for="namaKota">Nama Kota</label>
+                    <input type="text" class="form-control" name="namaKota" placeholder="Masukan Nama Kota"
+                        value="{{ $dataKecamatan['namaKota']}}">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">
                     Simpan

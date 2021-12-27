@@ -20,29 +20,31 @@
                 moga-moga Gusti Allah mencukupi!
             </p>
             <div class="search-form wow pulse px-3 d-flex justify-content-center" data-wow-delay="0.8s">
-                <form action="" class=" form-inline">
+                <form action="{{ route('search') }}" method="GET" class=" form-inline">
                     <div class="form-group px-3">
-                        <input type="text" class="form-control" placeholder="Keyword">
+                        <input type="text" name="search" class="form-control" placeholder="Keyword">
                     </div>
+                </form>
+                <form action="{{ route('advancesearch') }}" method="GET" class=" form-inline">
                     <div class="form-group px-3">
-                        <select id="basic" class="selectpicker show-tick form-control">
+                        <select id="kkId" name="advancesearch" class="selectpicker show-tick form-control">
                             <option selected="selected">-Kota/Daerah-</option>
                             @foreach ($cities as $cities)
-                            <option>{{ $cities->nama_kk }}</option>
+                            <option value="{{ $cities->kk_id }}"> {{ $cities->nama_kk   }}</option>
                             @endforeach
-                            <!-- DISINI NTAR BUAT DATABASE WILAYAH -->
                         </select>
                     </div>
                     <div class="form-group px-3">
-                        <select id="basic" class="selectpicker show-tick form-control">
+                        <select id="tipeId" name="advancesearch" class="selectpicker show-tick form-control">
                             <option selected="selected">-Kategori-</option>
                             @foreach ($tipeBangunan as $tipeBangunan)
-                            <option>{{ $tipeBangunan->nama_tipe }}</option>
+                            <option value="{{ $tipeBangunan->tipe_id }}">{{ $tipeBangunan->nama_tipe }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <button class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
+                    <button id="findBtn" class="btn search-btn" type="submit"><i class="fa fa-search"></i></button>
                 </form>
+
             </div>
         </div>
     </center>
@@ -51,7 +53,7 @@
 
 @auth
 <div class="container">
-    <h3>Rekomendasi Tempat</h3>
+<center class="py-3"><h3>Rekomendasi Tempat</h3></center>
     <div class="container">
         <div class="row">
             <div class="col-6 text-right">
@@ -66,21 +68,8 @@
                 <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
 
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="row">
-                            @foreach($dataDaerah as $dataDaerah)
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Daerah : {{ $dataDaerah['nama_daerah'] }}</h4>
-                                            <p class="card-text">Kecamatan : {{ $dataDaerah['nama_kecamatan'] }}</p>
-                                            <p class="card-text">Kelurahan : {{ $dataDaerah['nama_kelurahan'] }}</p>
-                                            <p class="card-text">Dekat Dengan : {{ $dataDaerah['nearBy'] }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach   
-                            </div>
+                    <div class="carousel-item active">
+                            
                         </div>
                         <div class="carousel-item">
                             <div class="row">
@@ -163,9 +152,9 @@
 @endauth
 
 <div class="container">
-    <h3>Kontrakan Dan Kos-Kosan</h3>
+<center class="py-3"><h3>Kontrakan Dan Kos-Kosan</h3></center>
     <div class="row">
-        @foreach($bangunan as $bangunan)
+        @foreach($detailbangunan as $bangunan)
         <div class="card " style="width: 15rem;">
             <a href="/detail/{{ $bangunan->building_id }}" style="text-decoration: none;">
                 <div class="inner">
@@ -182,4 +171,28 @@
         @endforeach
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function()
+{
+    $("#findBtn").click(function()
+    {
+        var kk = $("kkId").val();
+        var tipe = $("tipeId").val();
+        alert(kk);
+
+        $.ajax(
+            {
+                type: 'get',
+                dataType: 'html',
+                url: "{{ url('/home/advancesearch') }}",
+                data:'kk_id=' + kk + '&tipe_id=' + tipe,
+                success:function(response)
+                {
+                    console.log(response);
+                    $("#buildingData").html(response);
+                }
+            });
+    });
+});
+</script>
 @endsection

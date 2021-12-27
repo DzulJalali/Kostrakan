@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\AdminController;
 use App\Http\LoginController;
+use App\Http\CBFController;
 use App\Http\HomeController;
 use App\Http\DetailController;
 use App\Http\UserController;
@@ -31,12 +32,22 @@ use App\Http\RegisterBangunanController;
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home',[App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\CBFController::class, 'getRecomendation'])->name('rekomendasi');
+
+Route::get('/home/search', [App\Http\Controllers\HomeController::class, 'searchwithkeyword'])->name('search');
+Route::get('/home/advancesearch', [App\Http\Controllers\HomeController::class, 'advanceSearch'])->name('advancesearch');
+
+
 
 //login with Google
 // Google login
 Route::get('login/google', [App\Http\Controllers\Auth\LoginController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('login/google/callback', [App\Http\Controllers\Auth\LoginController::class, 'handleGoogleCallback']);
+
+//Route User Needs
+Route::get('/register/needs', [App\Http\Controllers\CBFController::class, 'needs'])->name('needs');
+Route::post('/register/needs/submit', [App\Http\Controllers\CBFController::class, 'storeNeeds'])->name('rekomendasi');
 
 
 Route::get('/admin/home', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.home')->middleware('role');

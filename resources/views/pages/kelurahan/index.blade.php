@@ -20,6 +20,7 @@ Kelurahan
                 <th scope="col">No</th>
                 <th scope="col">Nama Kecamatan</th>
                 <th scope="col">Nama Kelurahan</th>
+                <th scope="col">Nama Kota</th>
                 <th scope="col" class="text-center"><i class="fas fa-cog"></i></th>
             </tr>
         </thead>
@@ -29,8 +30,9 @@ Kelurahan
             @foreach($dataKelurahan as $datakelurahan)
             <tr>
                 <td data-label="No">{{$no++}}</td>
-                <td data-label="Nama Kecamatan">{{$datakelurahan['nama_kecamatan']}}</td>
-                <td data-label="Nama Kecamatan">{{$datakelurahan['nama_kelurahan']}}</td>
+                <td data-label="Nama Kecamatan">{{$datakelurahan['namaKecamatan']}}</td>
+                <td data-label="Nama Kelurahan">{{$datakelurahan['namaKelurahan']}}</td>
+                <td data-label="Nama Kota">{{$datakelurahan['namaKota']}}</td>
                 <td data-label="Option">
                     <a href="/kelurahan/detail/{{$datakelurahan['id_kelurahan']}}" class="btn btn-primary">
                         <i class="fa fa-eye"></i>

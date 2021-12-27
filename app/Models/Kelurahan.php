@@ -10,7 +10,7 @@ class Kelurahan extends Model
 {
     public function all_data(){
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJZFVzZXIiOiIyIiwiVXNlcm5hbWUiOiJ1Y3VwIn0.XFBa7OfjJgqG3545sgb2UuwV66t2TZ3iwwzQG9fOBFY',
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF91c2VyIjoiMSIsInVzZXJuYW1lIjoidWN1cCJ9.420nxHwD_Koo79Ld7ipye_3hglYqfjlPUcWery_ma4I',
             ])->get('http://localhost:8080/api/kelurahan/', [
                 'key' => '123',
             ]);
@@ -19,7 +19,7 @@ class Kelurahan extends Model
 
     public function data_id($id){
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJZFVzZXIiOiIyIiwiVXNlcm5hbWUiOiJ1Y3VwIn0.XFBa7OfjJgqG3545sgb2UuwV66t2TZ3iwwzQG9fOBFY',
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF91c2VyIjoiMSIsInVzZXJuYW1lIjoidWN1cCJ9.420nxHwD_Koo79Ld7ipye_3hglYqfjlPUcWery_ma4I',
             ])->get('http://localhost:8080/api/kelurahan/'.$id , [
                 'key' => '123',
             ]);
@@ -28,7 +28,7 @@ class Kelurahan extends Model
 
     public function searchData($keyword){
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJZFVzZXIiOiIyIiwiVXNlcm5hbWUiOiJ1Y3VwIn0.XFBa7OfjJgqG3545sgb2UuwV66t2TZ3iwwzQG9fOBFY',
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF91c2VyIjoiMSIsInVzZXJuYW1lIjoidWN1cCJ9.420nxHwD_Koo79Ld7ipye_3hglYqfjlPUcWery_ma4I',
         ])->get('http://localhost:8080/api/kelurahan/search/', [
             'key' => '123',
             'keyword'=>$keyword,
@@ -39,17 +39,17 @@ class Kelurahan extends Model
     public function tambahData($data)
     {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJZFVzZXIiOiIyIiwiVXNlcm5hbWUiOiJ1Y3VwIn0.XFBa7OfjJgqG3545sgb2UuwV66t2TZ3iwwzQG9fOBFY',
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF91c2VyIjoiMSIsInVzZXJuYW1lIjoidWN1cCJ9.420nxHwD_Koo79Ld7ipye_3hglYqfjlPUcWery_ma4I',
         ])->post('http://localhost:8080/api/kelurahan/', $data);
     }
     public function editData($id, $data){
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJZFVzZXIiOiIyIiwiVXNlcm5hbWUiOiJ1Y3VwIn0.XFBa7OfjJgqG3545sgb2UuwV66t2TZ3iwwzQG9fOBFY',
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF91c2VyIjoiMSIsInVzZXJuYW1lIjoidWN1cCJ9.420nxHwD_Koo79Ld7ipye_3hglYqfjlPUcWery_ma4I',
         ])->put('http://localhost:8080/api/kelurahan/'.$id, $data);
     }
     public function deleteData($id){
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJZFVzZXIiOiIyIiwiVXNlcm5hbWUiOiJ1Y3VwIn0.XFBa7OfjJgqG3545sgb2UuwV66t2TZ3iwwzQG9fOBFY',
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF91c2VyIjoiMSIsInVzZXJuYW1lIjoidWN1cCJ9.420nxHwD_Koo79Ld7ipye_3hglYqfjlPUcWery_ma4I',
         ])->delete('http://localhost:8080/api/kelurahan/'.$id, [
             'key' => '123',
         ]);

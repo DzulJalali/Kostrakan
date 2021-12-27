@@ -1,8 +1,5 @@
 @extends('layouts_admin.main')
 
-@section('title')
-Edit Kecamatan {{$dataDetail['nama_kecamatan']}}
-@endsection
 
 @section('content')
 <!-- Begin Page Content -->
@@ -16,10 +13,14 @@ Edit Kecamatan {{$dataDetail['nama_kecamatan']}}
         <div class="card-body">
             <table class="table table-bordered">
                 <tr>
+                    <th scope="col">Kode Pos</th>
                     <th scope="col">Nama Kecamatan</th>
+                    <th scope="col">Nama Kota</th>
                 </tr>
                 <tr>
-                    <td data-label="Nama Kecamatan">{{$dataDetail['nama_kecamatan']}}</td>
+                <td data-label="Kode Pos">{{$dataDetail['kode_pos']}}</td>
+                <td data-label="Nama Kecamatan">{{$dataDetail['namaKecamatan']}}</td>
+                <td data-label="Nama Kota">{{$dataDetail['namaKota']}}</td>
                 </tr>
             </table>
         </div>
