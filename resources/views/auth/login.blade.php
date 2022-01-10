@@ -48,18 +48,43 @@
                                 </button>
 
                                 @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
+                        
+                                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                                            {{ __('Forgot Your Password?') }}
+                                        </a>
+                                   
                                 @endif
                             </div>
                         </div>
                         <div class="form-group row mb-2 py-3">
+                            <style>
+                               
+                                button
+                                {
+                                    width: 150px;
+                                    height: 50px;
+                                }
+                                a .btnGoogle
+                                {
+                                    
+                                    width: 150px;
+                                    height: 50px;
+                                }
+                                ion-icon
+                                {
+                                    position: relative;
+                                    top: 4px;
+                                    font-size: 1.2em;
+                                    text-decoration: none
+                                }
+                            </style>
                             <div class="col-sm-4 offset-md-4">
                                 <a href="{{ route('login.google') }}">
-                                    <button type="button" class="btn btn-block btn-google">
-                                        <i class="fa fa-google mr-2"></i>Google
-                                    </button>
+                                    <div class="btnGoogle">
+                                        <button type="button" class="btn btn-block btn-google">
+                                            <ion-icon name="logo-google"></ion-icon>oogle
+                                         </button>
+                                    </div>
                                 </a>
                             </div>
                         </div>
