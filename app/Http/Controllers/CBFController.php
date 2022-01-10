@@ -26,6 +26,9 @@ class CBFController extends Controller
         $data=[
             'tipeBangunan' => $this->tipe->getAll(),
             'cities' => $this->kotakabupaten->getAll(),
+            'ruangan' => $this->bangunan->getRuangan(),
+            'lantai' => $this->bangunan->getLantai(),
+            'fasilitas' => $this->bangunan->getAllDistinct(),
         ];
         return view('user_needs', $data);
     }
@@ -37,8 +40,8 @@ class CBFController extends Controller
             'user_id' => Auth::user()->user_id,
             'tipe_id' => $request->get('tipe_id'),
             'kk_id' => $request->get('kk_id'),
-            'minval' => $request->minval,
-            'maxval' => $request->maxval,
+            'jmlh_ruangan' => $request->jmlh_ruangan,
+            'jmlh_lantai' => $request->jmlh_lantai,
             'keterangan_fasilitas' => $request->keterangan_fasilitas,
         ];
         //dd($data);
@@ -68,7 +71,7 @@ class CBFController extends Controller
             ->where('keterangan_fasilitas', '=', $rekomen4)->get()
         ];
 
-        dd($data);
+        // dd($data);
         //return view('home', $data);
     }
     

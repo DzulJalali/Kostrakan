@@ -40,13 +40,13 @@ class HomeController extends Controller
         $data=[
             'detailbangunan' => $this->bangunan->getAll(),
             'bangunan' => $this->buildingdetails->getAll(),
-            
             'tipeBangunan' => $this->tipe->getAll(),
             'cities' => $this->kotakabupaten->getAll(),
             'user' => $this->user->getAll(),
         ];
+        
         // dd($data);
-        return view('home', $data);
+        return view('home',$data);
     }
     
     

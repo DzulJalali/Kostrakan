@@ -122,9 +122,16 @@ class BuildingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id){
+        $contents = BuildingDetails::filteredBySimilarContent($id);
+        $content = BuildingDetails::find($id);
+        $users = User::all();
+
+        if(sizeof($contents) == 0)
+            return 'There aren´t products to recommend';
+        else
+            // dd($contents);
+            return view('recomendation', compact('content', 'contents', 'users'));
     }
 
     /**

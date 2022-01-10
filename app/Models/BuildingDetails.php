@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\LikedContent;
+use App\Models\ContentBasedFilter;
 
 class BuildingDetails extends Model
 {
@@ -43,6 +47,20 @@ class BuildingDetails extends Model
                 ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
                 ->get();
                 
+    }
+
+    public function getAllDistinct(){
+        $fasilitas = DB::table('building_details')->select('keterangan_fasilitas')->distinct()->get();  
+        return $fasilitas;
+    }
+    public function getRuangan(){
+        $ruangan = DB::table('building_details')->select('jmlh_ruangan')->distinct()->get();  
+        return $ruangan;
+    }
+
+    public function getLantai(){
+        $ruangan = DB::table('building_details')->select('jmlh_lantai')->distinct()->get();  
+        return $ruangan;
     }
 
     public function storeBangunan($data)
@@ -137,9 +155,13 @@ class BuildingDetails extends Model
         ->where('published_date', 'like', '%'. $publishedDate. '%');
     }
 
-    public function generateContentMatrix()
+    public static function generateContentMatrix()
     {
-        $buildingsDB = BuildingDetails::all();
+        $buildingsDB = DB::table('building_details')
+        ->leftjoin('users as users', 'users.user_id', '=', 'building_details.user_id')
+        ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+        ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+        ->get();
 
         $buildingsAsociativeMatrix = array ();
 
@@ -147,6 +169,11 @@ class BuildingDetails extends Model
         {
             $buildingsAsociativeMatrix[$i] = array(
                 'building_id'           => $buildingsDB[$i]->building_id,
+                'name'           => $buildingsDB[$i]->name,
+                'tipe_id'           => $buildingsDB[$i]->tipe_id,
+                'kk_id'           => $buildingsDB[$i]->kk_id,
+                'nama_tipe'           => $buildingsDB[$i]->nama_tipe,
+                'nama_kk'           => $buildingsDB[$i]->nama_kk,
                 'alamat'         => $buildingsDB[$i]->alamat,
                 'published_date'        => $buildingsDB[$i]->published_date,
                 'status'       => $buildingsDB[$i]->status,
@@ -155,23 +182,77 @@ class BuildingDetails extends Model
                 'jmlh_lantai'    => $buildingsDB[$i]->jmlh_lantai,
                 'keterangan_fasilitas'   => $buildingsDB[$i]->keterangan_fasilitas,
                 'harga'  => $buildingsDB[$i]->harga,
+                'gambar1'  => $buildingsDB[$i]->gambar1,
+                'gambar2'  => $buildingsDB[$i]->gambar2,
+                'gambar3'  => $buildingsDB[$i]->gambar3,
+                'gambar4'  => $buildingsDB[$i]->gambar4,
             );
         }
+        // dd($buildingsAsociativeMatrix);
         return $buildingsAsociativeMatrix;
     }
 
-    public function filteredByUser()
+    public static function filteredBySimilarContent($id)
     {
-        $filteredByUser = ContentBasedFilter::where('user_id', Auth::user()->user_id->get());
+        $contentMatrix = BuildingDetails::generateContentMatrix();
+        $contentSimilarity = new ContentBasedFilter($contentMatrix);
 
-        $buildings = array();
+        $contentSimilarity->setTipe(SystemWeigth::first()->tipe);
+        $contentSimilarity->setCities(SystemWeigth::first()->kk);
+        $contentSimilarity->setRuangan(SystemWeigth::first()->ruangan);
+        $contentSimilarity->setLantai(SystemWeigth::first()->lantai);
+        $contentSimilarity->setFasilitas(SystemWeigth::first()->fasilitas);
+
+        $similarityMatrix = $contentSimilarity->calculateSimiliaritiesMatrix();
+
+        $contentSortedBySimilarity = $contentSimilarity->getBuildingBySimiliarities($id, $similarityMatrix);
+
+        return $contentSortedBySimilarity;
+    }
+
+    public static function filteredByUser()
+    {
+        $filteredByUser = ContentBasedFilter::where('user_id', Auth::user()->user_id)->get();
+        // dd($filteredByUser);
+
+        $building_details = array();
 
         foreach($filteredByUser as $filteredByUser)
         {
-            foreach(BuildingDetails::where('building_id', $filteredByUser->user_id)->get() as $content)
+            foreach(ContentBasedFilter::where('user_id', $filteredByUser->user_id)->get() as $content)
             {
-                $buildings[] = $content->building_id;
+                $building_details[] = $content->kk_id;
             }
+            // dd($filteredByUser->user_id);
+            
         }
+        // dd($building_details); 
+        $buildingIdFilteredByUser = array_unique($building_details);
+        $buildingFilteredByUser = BuildingDetails::wherein('building_id', $buildingIdFilteredByUser)->get();
+        $buildingsDB = BuildingDetails::all();
+        $buildingMatrix = BuildingDetails::generateContentMatrix();
+        $cbfMatrix = ContentBasedFilter::generateContentMatrix();
+        $buildingSimilarity = new ContentBasedFilter($buildingMatrix, $cbfMatrix);
+        // dd($buildingSimilarity);
+
+        $buildingSimilarity->setTipe(SystemWeigth::first()->tipe);
+        $buildingSimilarity->setCities(SystemWeigth::first()->kk);
+        $buildingSimilarity->setRuanganWeight(SystemWeigth::first()->ruangan);
+        $buildingSimilarity->setLantaiWeight(SystemWeigth::first()->lantai);
+        $buildingSimilarity->setFasilitasWeight(SystemWeigth::first()->fasilitas);
+
+        // dd($buildingSimilarity);
+
+        $similarityMatrix  = $buildingSimilarity->calculateSimilaritiesMatrix();
+        // dd($similarityMatrix);
+
+        $recommendedContentByFilter = array();
+
+        foreach($buildingIdFilteredByUser as $buildingIdFilteredByUser){
+        	$recommendedContentByFilter   = $buildingSimilarity->getBuildingBySimiliarities($buildingIdFilteredByUser, $similarityMatrix);
+        }
+        // dd($recommendedContentByFilter);
+
+        return $recommendedContentByFilter;
     }
 }

@@ -1,28 +1,70 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class ContentBasedFilter extends Model
 {
     protected $primaryKey = 'cf_id';
+    protected $table = 'content_filtering';
+
 
     protected $building_details = [];
+    protected $content_filtering = [];
     protected $hargaTermahal = 100;
-    protected $hargaWeight;
-    protected $building_types;
-    protected $cities;
+    protected $ruanganWeight;
+    protected $lantaiWeight;
     protected $kkWeight;
     protected $tipeWeight;
+    protected $fasilitasWeight;
 
 
-    public function __construct(array $building_details)
+    public function __construct($building_details='building_details', $content_filtering='content_filtering')
     {
-        $this->building = $building_details;
-        $this->hargaTermahal = max(array_column($building_details, 'harga'));  
+        $this->building_details = $building_details;
+        $this->content_filtering = $content_filtering;
+    }
+
+    public static function building_details(){
+        
+        return $this->belongsToMany('App\BuildingDetails', 'building_details');
+    }
+
+    public static function filteredByUser(){
+        $filteredByUser = ContentBasedFilter::orderBy('cf_id', 'DESC')->where('user_id', Auth::user()->user_id);
+        return $filteredByUser;
+    }
+
+    public static function generateContentMatrix()
+    {
+        $buildingsDB = DB::table('content_filtering')
+        ->leftjoin('users as users', 'users.user_id', '=', 'content_filtering.user_id')
+        ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'content_filtering.tipe_id')
+        ->leftjoin('cities as ct', 'ct.kk_id', '=', 'content_filtering.kk_id')
+        ->get();
+
+        $buildingsAsociativeMatrix = array ();
+
+        for($i = 0; $i < sizeof($buildingsDB); $i++)
+        {
+            $buildingsAsociativeMatrix[$i] = array(
+                'cf_id'           => $buildingsDB[$i]->cf_id,
+                'user_id'           => $buildingsDB[$i]->user_id,
+                'tipe_id'           => $buildingsDB[$i]->tipe_id,
+                'kk_id'           => $buildingsDB[$i]->kk_id,
+                'nama_tipe'           => $buildingsDB[$i]->nama_tipe,
+                'nama_kk'           => $buildingsDB[$i]->nama_kk,
+                'jmlh_ruangan'         => $buildingsDB[$i]->jmlh_ruangan,
+                'jmlh_lantai'        => $buildingsDB[$i]->jmlh_lantai,
+                'keterangan_fasilitas'   => $buildingsDB[$i]->keterangan_fasilitas,
+            );
+        }
+        // dd($buildingsAsociativeMatrix);
+        return $buildingsAsociativeMatrix;
     }
 
     public function storeContentFiltering($data)
@@ -30,77 +72,109 @@ class ContentBasedFilter extends Model
         DB::table('content_filtering')->insert($data);
     }
 
-    public function setCities(float $cities): void
+    public function setCities(float $weight): void
     {
-        $this->kotakabu = $cities;
+        $this->kkWeight = $weight;
     }
 
-    public function setTipe(float $tipe): void
+    public function setTipe(float $weight): void
     {
-        $this->tipeBangunan = $tipe;
+        $this->tipeWeight = $weight;
     }
 
-    public function calculateSimiliaritiesMatrix(): array
+    public function setRuanganWeight(float $weight): void
+    {
+        $this->ruanganWeight = $weight;
+    }
+
+    public function setLantaiWeight(float $weight): void
+    {
+        $this->lantaiWeight = $weight;
+    }
+    public function setFasilitasWeight(float $weight): void
+    {
+        $this->fasilitasWeight = $weight;
+    }
+    
+
+    public function calculateSimilaritiesMatrix(): array
     {
         $matrix = [];
-
-        foreach ($this->building as $building)
+        // dd($this->building_details[1]['kk_id']);
+        foreach ($this->content_filtering as $building) 
         {
-            $similiarities = [];
 
-            foreach ($this->building as $_building)
+            $similarityScores = [];
+            // dd($building);
+            foreach ($this->building_details as $_building) 
             {
-                if ($building['building_id'] === $_building['building_id'])
+                if ($building['kk_id'] != $_building['kk_id']) 
                 {
                     continue;
                 }
-                $similiarities['building_id' . $_building['building_id']] = $this->calculateSimiliarities($building, $_building);
+                $similarityScores['building_id_' . $_building['building_id']] = $this->calculateSimilarity($building, $_building);
+
             }
-            $matrix['building_id_' . $building['building_id']] = $similiarities;
+            $matrix['building_id_' . $building['kk_id']] = $similarityScores;
         }
         return $matrix;
     }
 
-    public function getBuildingBySimiliarities($buildingId, array $matrix): array
+
+    // public function calculateSimilaritiesMatrix(): array
+    // {
+    //     $matrix = [];
+
+    //     foreach ($this->content_filtering as $building) {
+
+    //         $similarityScores = [];
+
+    //         foreach ($this->building_details as $_building) {
+    //             if ($building['building_id'] === $_building['building_id']) {
+    //                 continue;
+    //             }
+    //             $similarityScores['building_id_' . $_building['building_id']] = $this->calculateSimilarity($building, $_building);
+    //         }
+    //         $matrix['building_id_' . $building['building_id']] = $similarityScores;
+    //     }
+    //     return $matrix;
+    // }
+
+    public function getBuildingBySimiliarities($buildingId, $matrix): array
     {
-        $similiarities = $matrix['bangunan_id_' . $buildingId] ?? null;
-        $sortBangunan = [];
+        $similarities = $matrix['building_id_' . $buildingId] ?? null;
+        $sortedBuildings = [];
 
-        if (is_null($similiarities))
-        {
-            throw new Exception('Bangunan dengan ID tersebut tidak ditemukan..');
+        if (is_null($similarities)) {
+            throw new Exception('Cant find building with that ID.');
         }
+        arsort($similarities);
 
-        arsort($similiarities);
-        foreach ($similiarities as $buildingIdKey => $similarity)
-        {
-            $id = intval(str_replace('building_id_', '', $buildingIdKey));
-            $buildings = array_filter($this->buildings, function ($building) use($id)
-            {
-                return $building['building_id'] === $id;
+        foreach ($similarities as $buildingIdKey => $similarity) {
+            $id = intval(str_replace('building_id_', '', $buildingIdKey)); 
+            $building_details = array_filter($this->building_details, function ($building) use ($id) 
+            { 
+                return $building['building_id'] === $id; 
             });
-            if (! count($buildings))
-            {
+            if (! count($building_details)) {
                 continue;
             }
-
-            $building = $buildings[array_keys($buildings)[0]];
+            $building = $building_details[array_keys($building_details)[0]]; 
             $building['similarity'] = $similarity;
-            $sortedbuildings[] = $building;
+            $sortedBuildings[] = $building;
         }
-        return $sortedbuildings;
+        return $sortedBuildings;
     }
 
     protected function calculateSimilarity($buildingA, $buildingB)
     {
-        return array_sum(
-            [
-                (Similarity::eucliden(
-                    Similarity::minMaxNorm([$buildingA['harga']], $this->hargaTermahal),
-                    Similarity::minMaxNorm([$buildingB['harga']], $this->hargaTermahal)
-                ) * $this->hargaWeight),
+        return array_sum([
+                (Similarity::jaccard($buildingA['nama_tipe'], $buildingB['nama_tipe']) * $this->tipeWeight),
                 (Similarity::jaccard($buildingA['nama_kk'], $buildingB['nama_kk']) * $this->kkWeight),
-                (Similarity::jaccard($buildingA['nama_tipe'], $buildingB['nama_tipe']) * $this->tipeWeight)
-            ]) / ($this->kkWeight + $this->hargaWeight + $this->tipeWeight);
+                (Similarity::jaccard($buildingA['jmlh_ruangan'], $buildingB['jmlh_ruangan']) * $this->ruanganWeight),
+                (Similarity::jaccard($buildingA['jmlh_lantai'], $buildingB['jmlh_lantai']) * $this->lantaiWeight),
+                (Similarity::jaccard($buildingA['keterangan_fasilitas'], $buildingB['keterangan_fasilitas']) * $this->fasilitasWeight)
+            ]) / ($this->kkWeight + $this->tipeWeight + $this->ruanganWeight + $this->lantaiWeight + $this->fasilitasWeight);
+            // ($this->kkWeight + $this->tipeWeight + $this->ruanganWeight + $this->lantaiWeight + $this->fasilitasWeight);
     }
 }

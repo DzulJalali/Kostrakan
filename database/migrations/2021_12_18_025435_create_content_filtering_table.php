@@ -18,8 +18,6 @@ class CreateContentFilteringTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('tipe_id')->unsigned();
             $table->bigInteger('kk_id')->unsigned();
-            $table->string('minval');
-            $table->string('maxval');
             $table->string('keterangan_fasilitas');
         });
 

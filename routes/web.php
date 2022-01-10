@@ -7,6 +7,9 @@ use App\Http\CBFController;
 use App\Http\HomeController;
 use App\Http\DetailController;
 use App\Http\UserController;
+use App\Models\BuildingDetails;
+use App\Models\ContentBasedFilter;
+use App\Models\Exception;
 use App\Http\BuildingController;
 use App\Http\DaerahController;
 use App\Http\KecamatanController;
@@ -48,6 +51,13 @@ Route::get('login/google/callback', [App\Http\Controllers\Auth\LoginController::
 //Route User Needs
 Route::get('/register/needs', [App\Http\Controllers\CBFController::class, 'needs'])->name('needs');
 Route::post('/register/needs/submit', [App\Http\Controllers\CBFController::class, 'storeNeeds'])->name('rekomendasi');
+
+Route::get('/recommendations', function(){
+	$contentsByContentBasedFiltering = BuildingDetails::filteredByUser();
+    // dd($contentsByContentBasedFiltering);
+
+    return view('recomendation', compact(['contentsByContentBasedFiltering']));
+})->name('recommendations');
 
 
 Route::get('/admin/home', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.home')->middleware('role');
