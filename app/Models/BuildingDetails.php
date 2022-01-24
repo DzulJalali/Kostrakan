@@ -221,7 +221,9 @@ class BuildingDetails extends Model
         {
             foreach(ContentBasedFilter::where('user_id', $filteredByUser->user_id)->get() as $content)
             {
+                $building_details[] = $content->tipe_id;
                 $building_details[] = $content->kk_id;
+                // $building_details[] = $content->jmlh_ruangan;
             }
             // dd($filteredByUser->user_id);
             

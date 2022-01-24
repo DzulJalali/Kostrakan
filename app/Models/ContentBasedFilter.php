@@ -108,7 +108,8 @@ class ContentBasedFilter extends Model
             // dd($building);
             foreach ($this->building_details as $_building) 
             {
-                if ($building['kk_id'] != $_building['kk_id']) 
+                if ($building['kk_id'] != $_building['kk_id'] || $building['tipe_id'] != $_building['tipe_id'] || $building['jmlh_ruangan'] != $_building['jmlh_ruangan']
+                && $building['jmlh_lantai'] != $_building['jmlh_lantai'] && $building['keterangan_fasilitas'] != $_building['keterangan_fasilitas']) 
                 {
                     continue;
                 }
@@ -119,6 +120,29 @@ class ContentBasedFilter extends Model
         }
         return $matrix;
     }
+
+    // public function calculateSimilaritiesMatrix(): array
+    // {
+    //     $matrix = [];
+    //     // dd($this->building_details[1]['kk_id']);
+    //     foreach ($this->content_filtering as $building) 
+    //     {
+
+    //         $similarityScores = [];
+    //         // dd($building);
+    //         foreach ($this->building_details as $_building) 
+    //         {
+    //             if ($building['kk_id'] != $_building['kk_id']) 
+    //             {
+    //                 continue;
+    //             }
+    //             $similarityScores['building_id_' . $_building['building_id']] = $this->calculateSimilarity($building, $_building);
+
+    //         }
+    //         $matrix['building_id_' . $building['kk_id']] = $similarityScores;
+    //     }
+    //     return $matrix;
+    // }
 
 
     // public function calculateSimilaritiesMatrix(): array

@@ -29,6 +29,7 @@ class UserController extends Controller
         $data=[
             'user' => $this->user->getAll(),
         ];
+        // dd($data);
         return view('crud.users.index', $data);
     }
 

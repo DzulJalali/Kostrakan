@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+<link rel="stylesheet" href="{{asset('css/styles.css')}}">
 @section('content')
 <div class="container">
     <h3>Hasil Pencarian</h3>

@@ -18,9 +18,12 @@
                     <th scope="col">Nama Kota</th>
                 </tr>
                 <tr>
+                @foreach ($dataDetail as $dataDetail)
+        
                 <td data-label="Kode Pos">{{$dataDetail['kode_pos']}}</td>
                 <td data-label="Nama Kecamatan">{{$dataDetail['namaKecamatan']}}</td>
                 <td data-label="Nama Kota">{{$dataDetail['namaKota']}}</td>
+                @endforeach
                 </tr>
             </table>
         </div>

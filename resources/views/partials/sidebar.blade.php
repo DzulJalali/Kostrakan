@@ -59,6 +59,13 @@
      </li>
 
      <li class="nav-item">
+        <a class="nav-link" href="{{ route('kampus') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>DATA KAMPUS</span>
+        </a>
+    </li>
+
+     <li class="nav-item">
          <a class="nav-link" href="{{ route('tipeBangunan') }}">
              <i class="fas fa-fw fa-cog"></i>
              <span>DATA TIPE BANGUNAN</span>

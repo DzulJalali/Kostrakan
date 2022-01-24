@@ -12,6 +12,7 @@ use App\Models\ContentBasedFilter;
 use App\Models\Exception;
 use App\Http\BuildingController;
 use App\Http\DaerahController;
+use App\Http\KampusController;
 use App\Http\KecamatanController;
 use App\Http\KelurahanController;
 use App\Http\RegisterBangunanController;
@@ -56,7 +57,7 @@ Route::get('/recommendations', function(){
 	$contentsByContentBasedFiltering = BuildingDetails::filteredByUser();
     // dd($contentsByContentBasedFiltering);
 
-    return view('recomendation', compact(['contentsByContentBasedFiltering']));
+    return view('home', compact(['contentsByContentBasedFiltering']));
 })->name('recommendations');
 
 
@@ -149,3 +150,13 @@ Route::post('/admin/kota-kabupaten/tambahData', [App\Http\Controllers\CitiesCont
 Route::get('/admin/kota-kabupaten/edit/{id}', [App\Http\Controllers\CitiesController ::class,'edit'])->name('editDataKK');
 Route::post('/admin/kota-kabupaten/update/{id}', [App\Http\Controllers\CitiesController ::class,'update'])->name('updateDataKK');
 Route::get('/admin/kota-kabupaten/delete/{id}', [App\Http\Controllers\CitiesController ::class,'destroy'])->name('deleteDataKK');
+
+
+//Kampus
+Route::get('/admin/kampus', [App\Http\Controllers\KampusController ::class,'index'])->name('kampus');
+Route::get('/admin/kampus/tambah', [App\Http\Controllers\KampusController::class,'tampilTambah'])->name('tambahKampus');
+Route::post('/admin/kampus//tambahData', [App\Http\Controllers\KampusController::class,'submitTambahData'])->name('tambahDataKampus');
+Route::get('/admin/kampus/edit/{id}', [App\Http\Controllers\KampusController::class,'edit']);
+Route::post('/admin/kampus/update/{id}', [App\Http\Controllers\KampusController::class,'submitDataEdit']);
+Route::get('/admin/kampus/delete/{id}', [App\Http\Controllers\KampusController::class,'deleteData']);
+Route::get('/admin/kampus/detail/{id}', [App\Http\Controllers\KampusController::class,'detail']);

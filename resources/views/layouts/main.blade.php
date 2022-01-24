@@ -95,5 +95,6 @@
             @yield('content')
         </main>
     </div>
+    @include('partials.mainfooter')
 </body>
 </html>

@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends('layouts.main')
 @section('content')
 <link rel="stylesheet" href="{{asset('css/littlebar.css')}}">
 <link rel="stylesheet" href="{{asset('css/styles.css')}}">
@@ -46,34 +45,12 @@
 @auth
 <div class="container">
     <center class="py-3">
-        <h3>Rekomendasi Tempat</h3>
+        <h3>Rekomendasi</h3>
     </center>
-    <div class="container">
+
         <div class="row">
-            <div class="col-6 text-right">
-                <a class="btn btn-primary mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                    <i class="fa fa-arrow-left"></i>
-                </a>
-                <a class="btn btn-primary mb-3 " href="#carouselExampleIndicators2" role="button" data-slide="next">
-                    <i class="fa fa-arrow-right"></i>
-                </a>
-            </div>
-            <div class="col-12">
-                <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row">
-                                {{-- @include('recomendation', compact('contentsByContentBasedFiltering')) --}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @include('recomendation', compact('contentsByContentBasedFiltering'))
         </div>
-    </div>
-</div>
 </div>
 @endauth
 

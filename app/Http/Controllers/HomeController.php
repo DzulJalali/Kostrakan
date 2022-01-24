@@ -9,6 +9,7 @@ use App\Models\BuildingTypes;
 use App\Models\BuildingDetails;
 use App\Models\Cities;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -37,16 +38,38 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data=[
-            'detailbangunan' => $this->bangunan->getAll(),
-            'bangunan' => $this->buildingdetails->getAll(),
-            'tipeBangunan' => $this->tipe->getAll(),
-            'cities' => $this->kotakabupaten->getAll(),
-            'user' => $this->user->getAll(),
-        ];
+        if (Auth::check())
+        {
+            $contentsByContentBasedFiltering = BuildingDetails::filteredByUser();
+            // $building = BuildingDetails::all();
+            // $detailbangunan = Home::all();
+            // $cities = Cities::all();
+            // $tipeBangunan = BuildingTypes::all();
+            $data=[
+                'detailbangunan' => $this->bangunan->getAll(),
+                'bangunan' => $this->buildingdetails->getAll(),
+                'tipeBangunan' => $this->tipe->getAll(),
+                'cities' => $this->kotakabupaten->getAll(),
+                'user' => $this->user->getAll(),
+            ];
+            // dd($data, $building);
+            return view('home', $data, compact('contentsByContentBasedFiltering'));
+            // return view('home',compact(['contentsByContentBasedFiltering', 'building', 'detailbangunan', 'cities', 'tipeBangunan' ]),  $data, );
+        }
+        else
+        {
+            $data=[
+                'detailbangunan' => $this->bangunan->getAll(),
+                'bangunan' => $this->buildingdetails->getAll(),
+                'tipeBangunan' => $this->tipe->getAll(),
+                'cities' => $this->kotakabupaten->getAll(),
+                'user' => $this->user->getAll(),
+            ];
+            return view('home', $data);
+        }
         
-        // dd($data);
-        return view('home',$data);
+        
+        // dd($contentsByContentBasedFiltering, $data);
     }
     
     
