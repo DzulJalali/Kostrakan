@@ -1,6 +1,14 @@
 @extends('layouts_admin.main')
 
 @section('content')
+<style>
+    img
+    {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+    }
+</style>
 <div class="card mb-3">
     <div class="card-header">
         <a href="{{ route('create') }}"><i class="fas fa-plus"></i> Add New</a>
@@ -22,26 +30,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($user as $user): ?>
+                    <?php foreach ($user as $user1): ?>
                     <tr>
-                    <td>{{ $user->user_id }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->no_hp }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->username }}</td>
-                    <td>{{ $user->password }}</td>
-                    <td>{{ $user->role }}</td>
+                    <td>{{ $user1->user_id }}</td>
+                    <td>{{ $user1->name }}</td>
+                    <td>{{ $user1->no_hp }}</td>
+                    <td>{{ $user1->email }}</td>
+                    <td>{{ $user1->username }}</td>
+                    <td>{{ $user1->password }}</td>
+                    <td>{{ $user1->role }}</td>
                     <td>
-                        <img src="{{ asset('uploads/' . $user->profile_image) }}" width="200px" height="200px">
+                        <img src="{{ asset('uploads/' . $user1->profile_image) }}">
                     </td>
                         <td>
-                            <a href="{{ route('edit', $user->user_id) }}" class="btn btn-small"><i class="fas fa-edit"></i> Edit</a>
-                            <a href="{{ route('delete', $user->user_id) }}" class="btn btn-small text-danger"><i class="fas fa-trash"></i> Hapus</a>
+                            <a href="{{ route('edit', $user1->user_id) }}" class="btn btn-small"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="{{ route('delete', $user1->user_id) }}" class="btn btn-small text-danger"><i class="fas fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>         
                 </tbody>
             </table>
+
+            {!! $user->links() !!}
+
         </div>
     </div>
 </div>
