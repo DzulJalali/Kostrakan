@@ -160,3 +160,7 @@ Route::get('/admin/kampus/edit/{id}', [App\Http\Controllers\KampusController::cl
 Route::post('/admin/kampus/update/{id}', [App\Http\Controllers\KampusController::class,'submitDataEdit']);
 Route::get('/admin/kampus/delete/{id}', [App\Http\Controllers\KampusController::class,'deleteData']);
 Route::get('/admin/kampus/detail/{id}', [App\Http\Controllers\KampusController::class,'detail']);
+
+
+//
+Route::get('/detail-kampus/{id}',[App\Http\Controllers\DetailController::class,'getKampusById']);

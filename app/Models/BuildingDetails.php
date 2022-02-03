@@ -29,6 +29,15 @@ class BuildingDetails extends Model
         'gambar4',
     ];
 
+    public function cities()
+    {
+    	return $this->hasOne(Cities::class);
+    }
+    public function building_types()
+    {
+    	return $this->hasOne(BuildingTypes::class);
+    }
+
     protected $table = 'building_details';
     protected $primaryKey = 'building_id';
 
@@ -257,4 +266,7 @@ class BuildingDetails extends Model
 
         return $recommendedContentByFilter;
     }
+
+
+
 }

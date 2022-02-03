@@ -9,6 +9,7 @@ use App\Models\BuildingTypes;
 use App\Models\BuildingDetails;
 use App\Models\Cities;
 use App\Models\User;
+use App\Models\Kampus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +28,7 @@ class HomeController extends Controller
         $this->tipe = new BuildingTypes();
         $this->kotakabupaten = new Cities();
         $this->user = new User();
+        $this->kampus = new Kampus();
         $this->buildingdetails = new BuildingDetails();
 
     }
@@ -49,6 +51,7 @@ class HomeController extends Controller
                 'detailbangunan' => $this->bangunan->getAll(),
                 'bangunan' => $this->buildingdetails->getAll(),
                 'tipeBangunan' => $this->tipe->getAll(),
+                'dataKampus'=>$this->kampus->all_data(),
                 'cities' => $this->kotakabupaten->getAll(),
                 'user' => $this->user->getAll(),
             ];
@@ -62,6 +65,7 @@ class HomeController extends Controller
                 'detailbangunan' => $this->bangunan->getAll(),
                 'bangunan' => $this->buildingdetails->getAll(),
                 'tipeBangunan' => $this->tipe->getAll(),
+                'dataKampus'=>$this->kampus->all_data(),
                 'cities' => $this->kotakabupaten->getAll(),
                 'user' => $this->user->getAll(),
             ];
@@ -85,66 +89,68 @@ class HomeController extends Controller
         return view('search', compact('bangunan'));
     }
 
+    public function advanceSearch(Request $request)
+    {
+        $kk_id = $request->kk_id;
+        $tipe_id = $request->tipe_id;
+        
+        $bangunan = BuildingDetails::where('building_details.kk_id', $kk_id)
+        ->where('building_details.tipe_id', $tipe_id)
+       ->get();
+
+        $selected_id = [];
+        $selected_id['kk_id'] = $request->kk_id;
+        $selected_id['tipe_id'] = $request->tipe_id;
+
+        dd($bangunan, $selected_id);
+        return view('search',compact('bangunan','selected_id'));
+
+    }
+
     // public function advanceSearch(Request $request)
     // {
     //     $kk_id = $request->kk_id;
     //     $tipe_id = $request->tipe_id;
 
-        
-    //     $bangunan = DB::table('building_details')
-    //     ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
-    //     ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
-    //     ->where('building_details.kk_id', $kk_id)
-    //     ->where('building_details.tipe_id', $tipe_id)
-    //     ->get();
-    //     dd($bangunan);
+    //     if($request->kk_id != null && $request->tipe_id != null)
+    //     {
+    //         $bangunan = DB::table('building_details')
+    //         ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+    //         ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+    //         ->where('building_details.kk_id', $kk_id)
+    //         ->where('building_details.tipe_id', $tipe_id)
+    //         ->get();
+    //     }
+    //     else if($request->kk_id == null)
+    //     {
+    //         $bangunan = DB::table('building_details')
+    //         ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+    //         ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+    //         ->where('building_details.kk_id', $kk_id)
+    //         ->get();
+    //     }
+    //     else if($request->tipe_id != null)
+    //     {
+    //         $bangunan = DB::table('building_details')
+    //         ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
+    //         ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
+    //         ->where('building_details.tipe_id', $tipe_id)
+    //         ->get();
+    //     }
+    //     else
+    //     {
+            // return "<h1 align='center'>Please select atleast one filter from dropdown</h1>";
+    //     }
+
+        // if(count($bangunan)=="0"){
+        //     echo "<h1 align='center'>no products found under this Category</h1>";
+        //   }
+        //   else
+        //   {
+        //     return view('search',[
+        //     'bangunan' => $bangunan, 'display' => $bangunan
+        //   ]);
+        //  }
         
     // }
-
-    public function advanceSearch(Request $request)
-    {
-        $kk_id = $request->kk_id;
-        $tipe_id = $request->tipe_id;
-
-        if($kk_id != null && $tipe_id!= null)
-        {
-            $bangunan = DB::table('building_details')
-            ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
-            ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
-            ->where('building_details.kk_id', $kk_id)
-            ->where('building_details.tipe_id', $tipe_id)
-            ->get();
-        }
-        else if($kk_id != null)
-        {
-            $kk_id = $request->kk_id;
-            $bangunan = DB::table('building_details')
-            ->leftjoin('cities as ct', 'ct.kk_id', '=', 'building_details.kk_id')
-            ->where('building_details.kk_id', $kk_id)
-            ->get();
-        }
-        else if($tipe_id!=null)
-        {
-            $tipe_id = $request->tipe_id;
-            $bangunan = DB::table('building_details')
-            ->leftjoin('building_types as bt', 'bt.tipe_id', '=', 'building_details.tipe_id')
-            ->where('building_details.tipe_id', $tipe_id)
-            ->get();
-        }
-        else
-        {
-            return "<h1 align='center'>Please select atleast one filter from dropdown</h1>";
-        }
-
-        if(count($bangunan)=="0"){
-            echo "<h1 align='center'>no products found under this Category</h1>";
-          }
-          else
-          {
-          return view('search',[
-            'bangunan' => $bangunan, 'display' => $bangunan[0]->nama_kk
-          ]);
-         }
-        
-    }
 }

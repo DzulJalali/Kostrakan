@@ -40,6 +40,15 @@ class KampusController extends Controller
         }
     }
 
+    public function display()
+    {
+        $data = [
+            'dataKampus'=>$this->kampus->all_data(),
+        ];
+
+        return view('apikampus', $data);
+    }
+
     public function tampilTambah()
     {
         return view('pages.kampus.tambah');

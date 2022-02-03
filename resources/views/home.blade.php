@@ -76,6 +76,30 @@
         @endforeach
     </div>
 </div>
+
+<center class="py-3">
+    <h3>Kontrakan Dan Kos-Kosan Didekat Kampus</h3>
+</center>
+
+<div class="row">
+    @foreach($dataKampus as $dataKampus)
+    <div class="card " style="width: 15rem;">
+        <a href="/detail-kampus/{{ $dataKampus['id_kampus'] }}" style="text-decoration: none;">
+            <div class="card-body">
+                <h5 class="card-title">{{ $dataKampus['namaKampus'] }}</h5>
+                <p class="card-text">{{ $dataKampus['alamatKampus'] }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Kota : {{ $dataKampus['namaKota'] }}</li>
+                <li class="list-group-item">Kelurahan : {{ $dataKampus['namaKelurahan'] }}</li>
+                <li class="list-group-item">Kecamatan : {{ $dataKampus['namaKecamatan'] }}</li>
+            </ul>
+        </a>
+    </div>
+    @endforeach
+ </div>
+ <br><br>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#findBtn").click(function () {

@@ -18,4 +18,9 @@ class BuildingTypes extends Model
     public function getAll(){
         return DB::table('building_types')->select('*')->get();
     }
+
+    public function building_types()
+    {
+    	return $this->hasOne(BuildingDetails::class);
+    }
 }

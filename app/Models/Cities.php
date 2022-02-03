@@ -20,6 +20,12 @@ class Cities extends Model
         return DB::table('cities')->select('*')->get();
     }
 
+    
+    public function cities()
+    {
+    	return $this->hasOne(BuildingDetails::class);
+    } 
+
     public function cityById($id)
     {
         $city = DB::table('cities')->select('*')->where('kk_id', $id)->first();
