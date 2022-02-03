@@ -27,7 +27,7 @@ class UserController extends Controller
     public function index()
     {
         $data=[
-            'user' => $this->user->getAll(),
+            'user' => $this->user->paginate(3),
         ];
         // dd($data);
         return view('crud.users.index', $data);

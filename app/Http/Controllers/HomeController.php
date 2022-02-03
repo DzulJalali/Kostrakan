@@ -46,7 +46,7 @@ class HomeController extends Controller
             // $cities = Cities::all();
             // $tipeBangunan = BuildingTypes::all();
             $data=[
-                'detailbangunan' => $this->bangunan->getAll(),
+                'detailbangunan' => $this->bangunan->paginate(6),
                 'bangunan' => $this->buildingdetails->getAll(),
                 'tipeBangunan' => $this->tipe->getAll(),
                 'cities' => $this->kotakabupaten->getAll(),
@@ -59,7 +59,7 @@ class HomeController extends Controller
         else
         {
             $data=[
-                'detailbangunan' => $this->bangunan->getAll(),
+                'detailbangunan' => $this->bangunan->paginate(6),
                 'bangunan' => $this->buildingdetails->getAll(),
                 'tipeBangunan' => $this->tipe->getAll(),
                 'cities' => $this->kotakabupaten->getAll(),
